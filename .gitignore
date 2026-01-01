@@ -1,0 +1,26 @@
+# Xcode
+.DS_Store
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+xcuserdata/
+
+# Build
+.build/
+DerivedData/
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# Secrets - NEVER COMMIT
+Sources/Highball/Secrets.swift
+Secrets.swift
+.env
+.env.*
+
+# IDE
+*.idea/
+*.vscode/
