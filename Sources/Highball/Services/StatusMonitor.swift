@@ -10,6 +10,9 @@ final class StatusMonitor: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var lastError: String?
     @Published private(set) var isConfigured = false
+    @Published private(set) var history: [DeploymentHistoryEntry] = []
+
+    private let maxHistoryEntries = 20
 
     // MARK: - Computed Properties
 
@@ -51,6 +54,7 @@ final class StatusMonitor: ObservableObject {
 
     init() {
         loadConfiguration()
+        loadHistory()
     }
 
     // MARK: - Public Methods
@@ -102,6 +106,18 @@ final class StatusMonitor: ObservableObject {
                             oldStatus: old,
                             newStatus: deployment.status
                         )
+                        // Record to history
+                        let entry = DeploymentHistoryEntry(
+                            serviceId: serviceId,
+                            serviceName: service.serviceName,
+                            oldStatus: old,
+                            newStatus: deployment.status
+                        )
+                        history.insert(entry, at: 0)
+                        if history.count > maxHistoryEntries {
+                            history = Array(history.prefix(maxHistoryEntries))
+                        }
+                        saveHistory()
                     }
                     previousStatuses[serviceId] = deployment.status
                 }
@@ -155,7 +171,9 @@ final class StatusMonitor: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "projectId")
         UserDefaults.standard.removeObject(forKey: "serviceIds")
         UserDefaults.standard.removeObject(forKey: "serviceNames")
+        UserDefaults.standard.removeObject(forKey: "deploymentHistory")
         services = []
+        history = []
         isConfigured = false
         previousStatuses = [:]
     }
@@ -214,5 +232,18 @@ final class StatusMonitor: ObservableObject {
 
         let serviceNames = Dictionary(uniqueKeysWithValues: services.map { ($0.id, $0.serviceName) })
         defaults.set(serviceNames, forKey: "serviceNames")
+    }
+
+    private func loadHistory() {
+        guard let data = UserDefaults.standard.data(forKey: "deploymentHistory"),
+              let entries = try? JSONDecoder().decode([DeploymentHistoryEntry].self, from: data) else {
+            return
+        }
+        history = entries
+    }
+
+    private func saveHistory() {
+        guard let data = try? JSONEncoder().encode(history) else { return }
+        UserDefaults.standard.set(data, forKey: "deploymentHistory")
     }
 }

@@ -28,11 +28,6 @@ struct ServiceRowView: View {
                         .monospacedDigit()
                 }
             }
-
-            // Chevron for clickability hint
-            Image(systemName: "chevron.right")
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)

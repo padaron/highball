@@ -131,3 +131,35 @@ struct MonitoredService: Identifiable {
         }
     }
 }
+
+struct DeploymentHistoryEntry: Identifiable, Codable {
+    let id: UUID
+    let serviceId: String
+    let serviceName: String
+    let oldStatus: DeploymentStatus
+    let newStatus: DeploymentStatus
+    let timestamp: Date
+
+    init(serviceId: String, serviceName: String, oldStatus: DeploymentStatus, newStatus: DeploymentStatus) {
+        self.id = UUID()
+        self.serviceId = serviceId
+        self.serviceName = serviceName
+        self.oldStatus = oldStatus
+        self.newStatus = newStatus
+        self.timestamp = Date()
+    }
+
+    var timeAgo: String {
+        let elapsed = Date().timeIntervalSince(timestamp)
+        let minutes = Int(elapsed / 60)
+        let hours = Int(elapsed / 3600)
+
+        if hours > 0 {
+            return "\(hours)h ago"
+        } else if minutes > 0 {
+            return "\(minutes)m ago"
+        } else {
+            return "just now"
+        }
+    }
+}

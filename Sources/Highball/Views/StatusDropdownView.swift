@@ -4,7 +4,6 @@ struct StatusDropdownView: View {
     @ObservedObject var monitor: StatusMonitor
     @Environment(\.openURL) private var openURL
     @Environment(\.openWindow) private var openWindow
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Header
@@ -77,6 +76,24 @@ struct StatusDropdownView: View {
                 .padding(.vertical, 8)
             }
 
+            // History section
+            if !monitor.history.isEmpty {
+                Divider()
+                HStack {
+                    Text("Recent")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                    Spacer()
+                }
+                .padding(.horizontal, 12)
+                .padding(.top, 6)
+                .padding(.bottom, 2)
+
+                ForEach(monitor.history.prefix(5)) { entry in
+                    HistoryRowView(entry: entry)
+                }
+            }
+
             Divider()
 
             // Actions
@@ -134,5 +151,37 @@ struct StatusDropdownView: View {
     private func openSettings() {
         NSApp.activate(ignoringOtherApps: true)
         openWindow(id: "settings")
+    }
+}
+
+struct HistoryRowView: View {
+    let entry: DeploymentHistoryEntry
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(entry.newStatus.color)
+                .frame(width: 6, height: 6)
+
+            Text(entry.serviceName)
+                .font(.caption)
+                .lineLimit(1)
+
+            Image(systemName: "arrow.right")
+                .font(.system(size: 8))
+                .foregroundStyle(.tertiary)
+
+            Text(entry.newStatus.displayName)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Text(entry.timeAgo)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 3)
     }
 }
