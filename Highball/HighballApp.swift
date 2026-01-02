@@ -4,6 +4,7 @@ import UserNotifications
 @main
 struct HighballApp: App {
     @StateObject private var statusMonitor = StatusMonitor()
+    @StateObject private var hotKeyManager = HotKeyManager.shared
 
     init() {
         // Set up notification delegate
@@ -13,6 +14,9 @@ struct HighballApp: App {
     var body: some Scene {
         MenuBarExtra {
             StatusDropdownView(monitor: statusMonitor)
+                .onAppear {
+                    hotKeyManager.statusMonitor = statusMonitor
+                }
         } label: {
             MenuBarIcon(status: statusMonitor.aggregateStatus)
         }

@@ -8,7 +8,7 @@ struct StatusDropdownView: View {
         VStack(alignment: .leading, spacing: 0) {
             // Header
             HStack {
-                Text("Cratewise")
+                Text(monitor.displayProjectName)
                     .font(.headline)
                     .foregroundStyle(.primary)
 

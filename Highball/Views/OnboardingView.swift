@@ -278,6 +278,7 @@ struct OnboardingView: View {
             await monitor.configure(
                 token: tokenInput,
                 projectId: projectId,
+                projectName: project.project.name,
                 serviceIds: serviceIds
             )
 

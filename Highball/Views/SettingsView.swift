@@ -4,6 +4,7 @@ struct SettingsView: View {
     @ObservedObject var monitor: StatusMonitor
     @ObservedObject var notifications = NotificationManager.shared
     @ObservedObject var launchAtLogin = LaunchAtLoginManager.shared
+    @ObservedObject var hotKey = HotKeyManager.shared
     @Environment(\.openURL) private var openURL
     @Environment(\.openWindow) private var openWindow
 
@@ -42,6 +43,18 @@ struct SettingsView: View {
         Form {
             Section {
                 Toggle("Launch at Login", isOn: $launchAtLogin.isEnabled)
+
+                HStack {
+                    Toggle("Global Shortcut", isOn: $hotKey.isEnabled)
+                    Spacer()
+                    Text("⌘⇧H")
+                        .font(.system(.body, design: .rounded))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Color.secondary.opacity(0.15))
+                        .cornerRadius(4)
+                }
 
                 HStack {
                     Text("Polling Interval")

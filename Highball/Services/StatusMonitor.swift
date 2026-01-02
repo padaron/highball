@@ -12,6 +12,10 @@ final class StatusMonitor: ObservableObject {
     @Published private(set) var isConfigured = false
     @Published private(set) var history: [DeploymentHistoryEntry] = []
 
+    var displayProjectName: String {
+        projectName ?? "Project"
+    }
+
     private let maxHistoryEntries = 20
 
     // MARK: - Computed Properties
@@ -45,6 +49,7 @@ final class StatusMonitor: ObservableObject {
     private let pollingInterval: TimeInterval = 5.0
 
     private var projectId: String?
+    private var projectName: String?
     private var serviceIds: [String] = []
 
     // Track previous statuses for notification diffing
@@ -59,12 +64,13 @@ final class StatusMonitor: ObservableObject {
 
     // MARK: - Public Methods
 
-    func configure(token: String, projectId: String, serviceIds: [String]) async {
+    func configure(token: String, projectId: String, projectName: String, serviceIds: [String]) async {
         // Save token to Keychain
         try? KeychainManager.saveToken(token)
 
         self.apiClient = RailwayAPIClient(token: token)
         self.projectId = projectId
+        self.projectName = projectName
         self.serviceIds = serviceIds
         self.isConfigured = true
 
@@ -77,19 +83,19 @@ final class StatusMonitor: ObservableObject {
         guard let apiClient, !serviceIds.isEmpty else { return }
 
         isLoading = true
-        lastError = nil
 
-        do {
-            var updatedServices: [MonitoredService] = []
+        var updatedServices: [MonitoredService] = []
+        var fetchError: String?
 
-            for serviceId in serviceIds {
+        for serviceId in serviceIds {
+            do {
                 if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId) {
                     let existingService = services.first(where: { $0.id == serviceId })
 
                     let service = MonitoredService(
                         id: serviceId,
                         projectId: projectId ?? "",
-                        projectName: "Cratewise",
+                        projectName: projectName ?? "Project",
                         serviceName: existingService?.serviceName ?? serviceId,
                         status: deployment.status,
                         lastUpdated: Date(),
@@ -124,12 +130,13 @@ final class StatusMonitor: ObservableObject {
                     }
                     previousStatuses[serviceId] = deployment.status
                 }
+            } catch {
+                fetchError = error.localizedDescription
             }
-
-            self.services = updatedServices
-        } catch {
-            self.lastError = error.localizedDescription
         }
+
+        self.services = updatedServices
+        self.lastError = fetchError
 
         isLoading = false
     }
@@ -218,16 +225,18 @@ final class StatusMonitor: ObservableObject {
            let serviceIds = defaults.stringArray(forKey: "serviceIds"),
            let token = KeychainManager.getToken() {
             self.projectId = projectId
+            self.projectName = defaults.string(forKey: "projectName")
             self.serviceIds = serviceIds
             self.apiClient = RailwayAPIClient(token: token)
             self.isConfigured = true
 
             if let serviceNames = defaults.dictionary(forKey: "serviceNames") as? [String: String] {
+                let name = self.projectName ?? "Project"
                 self.services = serviceIds.map { id in
                     MonitoredService(
                         id: id,
                         projectId: projectId,
-                        projectName: "Cratewise",
+                        projectName: name,
                         serviceName: serviceNames[id] ?? id,
                         status: .unknown,
                         lastUpdated: Date(),
@@ -247,6 +256,7 @@ final class StatusMonitor: ObservableObject {
     private func saveConfiguration() {
         let defaults = UserDefaults.standard
         defaults.set(projectId, forKey: "projectId")
+        defaults.set(projectName, forKey: "projectName")
         defaults.set(serviceIds, forKey: "serviceIds")
 
         let serviceNames = Dictionary(uniqueKeysWithValues: services.map { ($0.id, $0.serviceName) })

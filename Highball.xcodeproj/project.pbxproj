@@ -12,6 +12,7 @@
 		212636684FE7D8B58FBD2597 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */; };
 		258CA386BD2AFCC55AFBD654 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */; };
 		3170852D8ABE10E71A691E89 /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50149BC4C44837FEAE4E10A1 /* LaunchAtLoginManager.swift */; };
+		4A42745030A3207C86A81785 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5085D94ECA6C68B4672426F /* HotKeyManager.swift */; };
 		4DCE3DDAC095EE263924E031 /* RailwayAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5337F5C4F097B0BEE288B283 /* RailwayAPIClient.swift */; };
 		7F17EA0A994E943A1DA70FE8 /* RailwayTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09E3253FA0724AEC85E1353 /* RailwayTypes.swift */; };
 		8A228389BF88ECC33D9D2B04 /* ServiceRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */; };
@@ -35,6 +36,7 @@
 		7B4212C305B621D99BF3681A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		912A91BF1CA1767076DD4B04 /* Highball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Highball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		A5085D94ECA6C68B4672426F /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
 		C55F773153D568A4F2151D5D /* Highball.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Highball.entitlements; sourceTree = "<group>"; };
 		D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRowView.swift; sourceTree = "<group>"; };
 		E09E3253FA0724AEC85E1353 /* RailwayTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailwayTypes.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 		489DADCF058416B8A5B69BFD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A5085D94ECA6C68B4672426F /* HotKeyManager.swift */,
 				988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */,
 				50149BC4C44837FEAE4E10A1 /* LaunchAtLoginManager.swift */,
 				6706B9756732A64C5C46E2D7 /* NotificationManager.swift */,
@@ -180,6 +183,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				994BEB0933F875ACA0DF97E1 /* HighballApp.swift in Sources */,
+				4A42745030A3207C86A81785 /* HotKeyManager.swift in Sources */,
 				212636684FE7D8B58FBD2597 /* KeychainManager.swift in Sources */,
 				3170852D8ABE10E71A691E89 /* LaunchAtLoginManager.swift in Sources */,
 				258CA386BD2AFCC55AFBD654 /* MenuBarIcon.swift in Sources */,
