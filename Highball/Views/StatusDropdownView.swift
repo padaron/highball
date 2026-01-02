@@ -58,6 +58,42 @@ struct StatusDropdownView: View {
                                 openURL(url)
                             }
                         }
+                        .contextMenu {
+                            Button {
+                                Task {
+                                    try? await monitor.restartService(service)
+                                }
+                            } label: {
+                                Label("Restart", systemImage: "arrow.clockwise")
+                            }
+
+                            Button {
+                                Task {
+                                    try? await monitor.redeployService(service)
+                                }
+                            } label: {
+                                Label("Redeploy", systemImage: "hammer")
+                            }
+
+                            Divider()
+
+                            Button {
+                                if let url = service.railwayURL {
+                                    NSWorkspace.shared.open(url)
+                                }
+                            } label: {
+                                Label("View in Railway", systemImage: "safari")
+                            }
+
+                            if let deploymentId = service.deploymentId {
+                                Button {
+                                    let logsURL = URL(string: "https://railway.com/project/\(service.projectId)/service/\(service.id)/deployment/\(deploymentId)?tab=logs")!
+                                    NSWorkspace.shared.open(logsURL)
+                                } label: {
+                                    Label("View Logs", systemImage: "doc.text")
+                                }
+                            }
+                        }
                 }
             }
 
@@ -89,8 +125,14 @@ struct StatusDropdownView: View {
                 .padding(.top, 6)
                 .padding(.bottom, 2)
 
-                ForEach(monitor.history.prefix(5)) { entry in
+                ForEach(monitor.history.prefix(10)) { entry in
                     HistoryRowView(entry: entry)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            if let url = entry.railwayURL {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
                 }
             }
 
@@ -175,9 +217,15 @@ struct HistoryRowView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
+            if let duration = entry.deploymentDuration {
+                Text("(\(duration))")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+
             Spacer()
 
-            Text(entry.timeAgo)
+            Text(entry.formattedTime)
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
         }

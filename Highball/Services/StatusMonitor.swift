@@ -110,8 +110,11 @@ final class StatusMonitor: ObservableObject {
                         let entry = DeploymentHistoryEntry(
                             serviceId: serviceId,
                             serviceName: service.serviceName,
+                            projectId: projectId ?? "",
+                            deploymentId: deployment.id,
                             oldStatus: old,
-                            newStatus: deployment.status
+                            newStatus: deployment.status,
+                            deploymentCreatedAt: deployment.createdAt
                         )
                         history.insert(entry, at: 0)
                         if history.count > maxHistoryEntries {
@@ -163,6 +166,22 @@ final class StatusMonitor: ObservableObject {
     func stop() {
         pollingTimer?.cancel()
         pollingTimer = nil
+    }
+
+    /// Restart a service's current deployment (keeps same build)
+    func restartService(_ service: MonitoredService) async throws {
+        guard let apiClient, let deploymentId = service.deploymentId else { return }
+        try await apiClient.restartDeployment(deploymentId: deploymentId)
+        // Refresh to get updated status
+        await refresh()
+    }
+
+    /// Redeploy a service (triggers new build)
+    func redeployService(_ service: MonitoredService) async throws {
+        guard let apiClient, let deploymentId = service.deploymentId else { return }
+        try await apiClient.redeployDeployment(deploymentId: deploymentId)
+        // Refresh to get updated status
+        await refresh()
     }
 
     func reset() {

@@ -136,30 +136,109 @@ struct DeploymentHistoryEntry: Identifiable, Codable {
     let id: UUID
     let serviceId: String
     let serviceName: String
+    let projectId: String
+    let deploymentId: String?
     let oldStatus: DeploymentStatus
     let newStatus: DeploymentStatus
     let timestamp: Date
+    let deploymentCreatedAt: Date?
 
-    init(serviceId: String, serviceName: String, oldStatus: DeploymentStatus, newStatus: DeploymentStatus) {
+    init(
+        serviceId: String,
+        serviceName: String,
+        projectId: String,
+        deploymentId: String?,
+        oldStatus: DeploymentStatus,
+        newStatus: DeploymentStatus,
+        deploymentCreatedAt: Date?
+    ) {
         self.id = UUID()
         self.serviceId = serviceId
         self.serviceName = serviceName
+        self.projectId = projectId
+        self.deploymentId = deploymentId
         self.oldStatus = oldStatus
         self.newStatus = newStatus
         self.timestamp = Date()
+        self.deploymentCreatedAt = deploymentCreatedAt
+    }
+
+    // Custom decoder to handle legacy entries missing new fields
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        serviceId = try container.decode(String.self, forKey: .serviceId)
+        serviceName = try container.decode(String.self, forKey: .serviceName)
+        projectId = try container.decodeIfPresent(String.self, forKey: .projectId) ?? ""
+        deploymentId = try container.decodeIfPresent(String.self, forKey: .deploymentId)
+        oldStatus = try container.decode(DeploymentStatus.self, forKey: .oldStatus)
+        newStatus = try container.decode(DeploymentStatus.self, forKey: .newStatus)
+        timestamp = try container.decode(Date.self, forKey: .timestamp)
+        deploymentCreatedAt = try container.decodeIfPresent(Date.self, forKey: .deploymentCreatedAt)
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, serviceId, serviceName, projectId, deploymentId
+        case oldStatus, newStatus, timestamp, deploymentCreatedAt
+    }
+
+    var railwayURL: URL? {
+        guard let deploymentId = deploymentId else {
+            return URL(string: "https://railway.com/project/\(projectId)/service/\(serviceId)")
+        }
+        return URL(string: "https://railway.com/project/\(projectId)/service/\(serviceId)/deployment/\(deploymentId)")
     }
 
     var timeAgo: String {
         let elapsed = Date().timeIntervalSince(timestamp)
+        let seconds = Int(elapsed)
         let minutes = Int(elapsed / 60)
         let hours = Int(elapsed / 3600)
+        let days = Int(elapsed / 86400)
 
-        if hours > 0 {
+        if days > 0 {
+            return "\(days)d ago"
+        } else if hours > 0 {
             return "\(hours)h ago"
         } else if minutes > 0 {
             return "\(minutes)m ago"
+        } else if seconds > 10 {
+            return "\(seconds)s ago"
         } else {
             return "just now"
+        }
+    }
+
+    var formattedTime: String {
+        let formatter = DateFormatter()
+        let calendar = Calendar.current
+
+        if calendar.isDateInToday(timestamp) {
+            formatter.dateFormat = "h:mm a"
+        } else if calendar.isDateInYesterday(timestamp) {
+            formatter.dateFormat = "'Yesterday' h:mm a"
+        } else {
+            formatter.dateFormat = "MMM d, h:mm a"
+        }
+
+        return formatter.string(from: timestamp)
+    }
+
+    /// Duration from deployment creation to this status change (for terminal states)
+    var deploymentDuration: String? {
+        guard let createdAt = deploymentCreatedAt else { return nil }
+        // Only show duration for terminal states
+        guard newStatus == .success || newStatus.isFailed else { return nil }
+
+        let elapsed = timestamp.timeIntervalSince(createdAt)
+        let seconds = Int(elapsed)
+        let minutes = Int(elapsed / 60)
+        let remainingSeconds = seconds % 60
+
+        if minutes > 0 {
+            return "\(minutes)m \(remainingSeconds)s"
+        } else {
+            return "\(seconds)s"
         }
     }
 }

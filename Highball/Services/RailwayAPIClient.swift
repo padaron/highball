@@ -119,6 +119,23 @@ actor RailwayAPIClient {
     }
     """
 
+    // MARK: - GraphQL Mutations
+
+    private static let deploymentRestartMutation = """
+    mutation DeploymentRestart($id: String!) {
+      deploymentRestart(id: $id)
+    }
+    """
+
+    private static let deploymentRedeployMutation = """
+    mutation DeploymentRedeploy($id: String!) {
+      deploymentRedeploy(id: $id) {
+        id
+        status
+      }
+    }
+    """
+
     // MARK: - Public Methods
 
     func fetchProjects() async throws -> [Project] {
@@ -209,6 +226,36 @@ actor RailwayAPIClient {
         }
     }
 
+    /// Restart a deployment (keeps the same build, just restarts the container)
+    func restartDeployment(deploymentId: String) async throws {
+        let variables: [String: Any] = ["id": deploymentId]
+
+        let response: GraphQLResponse<DeploymentRestartData> = try await execute(
+            query: Self.deploymentRestartMutation,
+            variables: variables,
+            queryName: "DeploymentRestart"
+        )
+
+        if let errors = response.errors, !errors.isEmpty {
+            throw RailwayAPIError.graphQLErrors(errors)
+        }
+    }
+
+    /// Redeploy a deployment (triggers a new build and deploy)
+    func redeployDeployment(deploymentId: String) async throws {
+        let variables: [String: Any] = ["id": deploymentId]
+
+        let response: GraphQLResponse<DeploymentRedeployData> = try await execute(
+            query: Self.deploymentRedeployMutation,
+            variables: variables,
+            queryName: "DeploymentRedeploy"
+        )
+
+        if let errors = response.errors, !errors.isEmpty {
+            throw RailwayAPIError.graphQLErrors(errors)
+        }
+    }
+
     // MARK: - Private Methods
 
     private func execute<T: Decodable>(
@@ -250,8 +297,6 @@ actor RailwayAPIClient {
             let decoder = JSONDecoder()
             return try decoder.decode(T.self, from: data)
         } catch {
-            // Print raw response for debugging
-            print("Decoding error. Raw response: \(String(data: data, encoding: .utf8) ?? "nil")")
             throw RailwayAPIError.decodingError(error)
         }
     }

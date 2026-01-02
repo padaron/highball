@@ -16,7 +16,7 @@ DerivedData/
 Package.resolved
 
 # Secrets - NEVER COMMIT
-Sources/Highball/Secrets.swift
+Highball/Secrets.swift
 Secrets.swift
 .env
 .env.*

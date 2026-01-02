@@ -128,3 +128,18 @@ struct ServiceInstance: Decodable {
     let serviceId: String
     let latestDeployment: Deployment?
 }
+
+// MARK: - Mutation Response Types
+
+struct DeploymentRestartData: Decodable {
+    let deploymentRestart: Bool
+}
+
+struct DeploymentRedeployData: Decodable {
+    let deploymentRedeploy: DeploymentRedeployResult?
+}
+
+struct DeploymentRedeployResult: Decodable {
+    let id: String
+    let status: DeploymentStatus
+}

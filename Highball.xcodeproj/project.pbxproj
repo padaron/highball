@@ -1,0 +1,411 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		130E8D90CFEF86063D3AEE33 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6706B9756732A64C5C46E2D7 /* NotificationManager.swift */; };
+		1D2F011829453E425726CFB8 /* ServiceStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E34FC8F7607A8839C4675F9 /* ServiceStatus.swift */; };
+		212636684FE7D8B58FBD2597 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */; };
+		258CA386BD2AFCC55AFBD654 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */; };
+		3170852D8ABE10E71A691E89 /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50149BC4C44837FEAE4E10A1 /* LaunchAtLoginManager.swift */; };
+		4DCE3DDAC095EE263924E031 /* RailwayAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5337F5C4F097B0BEE288B283 /* RailwayAPIClient.swift */; };
+		7F17EA0A994E943A1DA70FE8 /* RailwayTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09E3253FA0724AEC85E1353 /* RailwayTypes.swift */; };
+		8A228389BF88ECC33D9D2B04 /* ServiceRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */; };
+		96DCD94AF0531870A5C467E3 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 2D56CCDC79899C4A4A8B20A3 /* KeychainAccess */; };
+		994BEB0933F875ACA0DF97E1 /* HighballApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722AEF388A8833C636D9817B /* HighballApp.swift */; };
+		D065686D2CD149BAA1941F84 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4212C305B621D99BF3681A /* SettingsView.swift */; };
+		DDCCBB25DED23C18A1B9BA7A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52EB4D38A7457B3D72C199D /* OnboardingView.swift */; };
+		DE0239C5164150CF5B57B6CA /* StatusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB2CB8C43B302C41A13F18 /* StatusMonitor.swift */; };
+		E2EF84C181FAFF8F1490D0AE /* StatusDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524A549910AFBCF6DC32C8E2 /* StatusDropdownView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0ECB2CB8C43B302C41A13F18 /* StatusMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMonitor.swift; sourceTree = "<group>"; };
+		2E34FC8F7607A8839C4675F9 /* ServiceStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceStatus.swift; sourceTree = "<group>"; };
+		47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarIcon.swift; sourceTree = "<group>"; };
+		50149BC4C44837FEAE4E10A1 /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
+		524A549910AFBCF6DC32C8E2 /* StatusDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusDropdownView.swift; sourceTree = "<group>"; };
+		5337F5C4F097B0BEE288B283 /* RailwayAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailwayAPIClient.swift; sourceTree = "<group>"; };
+		6706B9756732A64C5C46E2D7 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		722AEF388A8833C636D9817B /* HighballApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighballApp.swift; sourceTree = "<group>"; };
+		7B4212C305B621D99BF3681A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		912A91BF1CA1767076DD4B04 /* Highball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Highball.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		C55F773153D568A4F2151D5D /* Highball.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Highball.entitlements; sourceTree = "<group>"; };
+		D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRowView.swift; sourceTree = "<group>"; };
+		E09E3253FA0724AEC85E1353 /* RailwayTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailwayTypes.swift; sourceTree = "<group>"; };
+		E52EB4D38A7457B3D72C199D /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		FAA80F796B786ED80EFF6300 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		39DF83AEE51D2D69CD46BDA9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96DCD94AF0531870A5C467E3 /* KeychainAccess in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		40184D20277362978439193B = {
+			isa = PBXGroup;
+			children = (
+				4C5B31C34CBC133A984A14CA /* Highball */,
+				7A4F712761D0FDCC2F088A6E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		489DADCF058416B8A5B69BFD /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */,
+				50149BC4C44837FEAE4E10A1 /* LaunchAtLoginManager.swift */,
+				6706B9756732A64C5C46E2D7 /* NotificationManager.swift */,
+				5337F5C4F097B0BEE288B283 /* RailwayAPIClient.swift */,
+				0ECB2CB8C43B302C41A13F18 /* StatusMonitor.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4C5B31C34CBC133A984A14CA /* Highball */ = {
+			isa = PBXGroup;
+			children = (
+				C55F773153D568A4F2151D5D /* Highball.entitlements */,
+				722AEF388A8833C636D9817B /* HighballApp.swift */,
+				FAA80F796B786ED80EFF6300 /* Info.plist */,
+				937E7EEE275B9ED783E3D7AF /* Models */,
+				489DADCF058416B8A5B69BFD /* Services */,
+				A904FFB316C74B4CD14D9712 /* Views */,
+			);
+			path = Highball;
+			sourceTree = "<group>";
+		};
+		7A4F712761D0FDCC2F088A6E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				912A91BF1CA1767076DD4B04 /* Highball.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		937E7EEE275B9ED783E3D7AF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E09E3253FA0724AEC85E1353 /* RailwayTypes.swift */,
+				2E34FC8F7607A8839C4675F9 /* ServiceStatus.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A904FFB316C74B4CD14D9712 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */,
+				E52EB4D38A7457B3D72C199D /* OnboardingView.swift */,
+				D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */,
+				7B4212C305B621D99BF3681A /* SettingsView.swift */,
+				524A549910AFBCF6DC32C8E2 /* StatusDropdownView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BCC3DB170B702ECDB6E19757 /* Highball */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 72932E7D6FE9CB56E448D1B5 /* Build configuration list for PBXNativeTarget "Highball" */;
+			buildPhases = (
+				4E200EEE9D042D12E96F8CAA /* Sources */,
+				39DF83AEE51D2D69CD46BDA9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Highball;
+			packageProductDependencies = (
+				2D56CCDC79899C4A4A8B20A3 /* KeychainAccess */,
+			);
+			productName = Highball;
+			productReference = 912A91BF1CA1767076DD4B04 /* Highball.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7F86A959F39B0606FE2697F1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					BCC3DB170B702ECDB6E19757 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = CB2D6F01922221B88B09FC7B /* Build configuration list for PBXProject "Highball" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 40184D20277362978439193B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4F5BB90A528E22E9221E2626 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BCC3DB170B702ECDB6E19757 /* Highball */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4E200EEE9D042D12E96F8CAA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				994BEB0933F875ACA0DF97E1 /* HighballApp.swift in Sources */,
+				212636684FE7D8B58FBD2597 /* KeychainManager.swift in Sources */,
+				3170852D8ABE10E71A691E89 /* LaunchAtLoginManager.swift in Sources */,
+				258CA386BD2AFCC55AFBD654 /* MenuBarIcon.swift in Sources */,
+				130E8D90CFEF86063D3AEE33 /* NotificationManager.swift in Sources */,
+				DDCCBB25DED23C18A1B9BA7A /* OnboardingView.swift in Sources */,
+				4DCE3DDAC095EE263924E031 /* RailwayAPIClient.swift in Sources */,
+				7F17EA0A994E943A1DA70FE8 /* RailwayTypes.swift in Sources */,
+				8A228389BF88ECC33D9D2B04 /* ServiceRowView.swift in Sources */,
+				1D2F011829453E425726CFB8 /* ServiceStatus.swift in Sources */,
+				D065686D2CD149BAA1941F84 /* SettingsView.swift in Sources */,
+				E2EF84C181FAFF8F1490D0AE /* StatusDropdownView.swift in Sources */,
+				DE0239C5164150CF5B57B6CA /* StatusMonitor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1130B57EBA4ED2D4785A3387 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1A671178DCD956ADF4909099 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		259E9D13E227CB4DE4CB651D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Highball/Highball.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Highball/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.highball.app;
+				PRODUCT_NAME = Highball;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		6A5E95278D641B3750A030A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Highball/Highball.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Highball/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.highball.app;
+				PRODUCT_NAME = Highball;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		72932E7D6FE9CB56E448D1B5 /* Build configuration list for PBXNativeTarget "Highball" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A5E95278D641B3750A030A7 /* Debug */,
+				259E9D13E227CB4DE4CB651D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CB2D6F01922221B88B09FC7B /* Build configuration list for PBXProject "Highball" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1130B57EBA4ED2D4785A3387 /* Debug */,
+				1A671178DCD956ADF4909099 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4F5BB90A528E22E9221E2626 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				kind = exactVersion;
+				version = 4.2.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2D56CCDC79899C4A4A8B20A3 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F5BB90A528E22E9221E2626 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 7F86A959F39B0606FE2697F1 /* Project object */;
+}
