@@ -46,7 +46,9 @@ final class StatusMonitor: ObservableObject {
 
     private var apiClient: RailwayAPIClient?
     private var pollingTimer: AnyCancellable?
-    private let pollingInterval: TimeInterval = 5.0
+    private let basePollingInterval: TimeInterval = 30.0  // Increased to avoid rate limits
+    private var currentPollingInterval: TimeInterval = 30.0
+    private var consecutiveRateLimits = 0
 
     private var projectId: String?
     private var projectName: String?
@@ -106,6 +108,8 @@ final class StatusMonitor: ObservableObject {
         var updatedServices: [MonitoredService] = []
         var fetchError: String?
 
+        var hitRateLimit = false
+
         for serviceId in serviceIds {
             do {
                 if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId) {
@@ -149,9 +153,20 @@ final class StatusMonitor: ObservableObject {
                     }
                     previousStatuses[serviceId] = deployment.status
                 }
+            } catch let error as RailwayAPIError where error == .rateLimited {
+                hitRateLimit = true
+                fetchError = error.localizedDescription
+                break  // Stop making more requests if rate limited
             } catch {
                 fetchError = error.localizedDescription
             }
+        }
+
+        // Handle rate limit backoff
+        if hitRateLimit {
+            handleRateLimit()
+        } else {
+            resetRateLimitBackoff()
         }
 
         // Only update if changed to avoid unnecessary SwiftUI re-renders
@@ -245,13 +260,28 @@ final class StatusMonitor: ObservableObject {
     private func startPolling() {
         pollingTimer?.cancel()
 
-        pollingTimer = Timer.publish(every: pollingInterval, on: .main, in: .common)
+        pollingTimer = Timer.publish(every: currentPollingInterval, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 Task { @MainActor in
                     await self?.refresh()
                 }
             }
+    }
+
+    private func handleRateLimit() {
+        consecutiveRateLimits += 1
+        // Exponential backoff: 30s -> 60s -> 120s -> max 5min
+        currentPollingInterval = min(basePollingInterval * pow(2.0, Double(consecutiveRateLimits - 1)), 300.0)
+        startPolling() // Restart with new interval
+    }
+
+    private func resetRateLimitBackoff() {
+        if consecutiveRateLimits > 0 {
+            consecutiveRateLimits = 0
+            currentPollingInterval = basePollingInterval
+            startPolling() // Restart with normal interval
+        }
     }
 
     private func loadConfiguration() {

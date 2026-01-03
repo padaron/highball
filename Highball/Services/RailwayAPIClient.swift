@@ -1,22 +1,42 @@
 import Foundation
 
-enum RailwayAPIError: LocalizedError {
+enum RailwayAPIError: LocalizedError, Equatable {
     case invalidToken
-    case networkError(Error)
-    case graphQLErrors([GraphQLError])
-    case decodingError(Error)
+    case rateLimited
+    case networkError(String)
+    case graphQLErrors([String])
+    case decodingError(String)
     case noData
+
+    static func == (lhs: RailwayAPIError, rhs: RailwayAPIError) -> Bool {
+        switch (lhs, rhs) {
+        case (.invalidToken, .invalidToken),
+             (.rateLimited, .rateLimited),
+             (.noData, .noData):
+            return true
+        case (.networkError(let l), .networkError(let r)):
+            return l == r
+        case (.graphQLErrors(let l), .graphQLErrors(let r)):
+            return l == r
+        case (.decodingError(let l), .decodingError(let r)):
+            return l == r
+        default:
+            return false
+        }
+    }
 
     var errorDescription: String? {
         switch self {
         case .invalidToken:
             return "Invalid or expired API token"
-        case .networkError(let error):
-            return "Network error: \(error.localizedDescription)"
+        case .rateLimited:
+            return "Rate limited by Railway. Waiting..."
+        case .networkError(let message):
+            return "Network error: \(message)"
         case .graphQLErrors(let errors):
-            return errors.map(\.message).joined(separator: ", ")
-        case .decodingError(let error):
-            return "Failed to parse response: \(error.localizedDescription)"
+            return errors.joined(separator: ", ")
+        case .decodingError(let message):
+            return "Failed to parse response: \(message)"
         case .noData:
             return "No data returned from API"
         }
@@ -171,7 +191,7 @@ actor RailwayAPIClient {
         )
 
         if let errors = response.errors, !errors.isEmpty {
-            throw RailwayAPIError.graphQLErrors(errors)
+            throw RailwayAPIError.graphQLErrors(errors.map(\.message))
         }
 
         guard let data = response.data else {
@@ -190,7 +210,7 @@ actor RailwayAPIClient {
         )
 
         if let errors = tokenResponse.errors, !errors.isEmpty {
-            throw RailwayAPIError.graphQLErrors(errors)
+            throw RailwayAPIError.graphQLErrors(errors.map(\.message))
         }
 
         guard let projectId = tokenResponse.data?.projectToken.projectId else {
@@ -205,7 +225,7 @@ actor RailwayAPIClient {
         )
 
         if let errors = projectResponse.errors, !errors.isEmpty {
-            throw RailwayAPIError.graphQLErrors(errors)
+            throw RailwayAPIError.graphQLErrors(errors.map(\.message))
         }
 
         guard let project = projectResponse.data?.project else {
@@ -223,7 +243,7 @@ actor RailwayAPIClient {
         )
 
         if let errors = response.errors, !errors.isEmpty {
-            throw RailwayAPIError.graphQLErrors(errors)
+            throw RailwayAPIError.graphQLErrors(errors.map(\.message))
         }
 
         return response.data?.project
@@ -239,7 +259,7 @@ actor RailwayAPIClient {
         )
 
         if let errors = response.errors, !errors.isEmpty {
-            throw RailwayAPIError.graphQLErrors(errors)
+            throw RailwayAPIError.graphQLErrors(errors.map(\.message))
         }
 
         return response.data?.service?.deployments.edges.first?.node
@@ -267,7 +287,7 @@ actor RailwayAPIClient {
         )
 
         if let errors = response.errors, !errors.isEmpty {
-            throw RailwayAPIError.graphQLErrors(errors)
+            throw RailwayAPIError.graphQLErrors(errors.map(\.message))
         }
     }
 
@@ -282,7 +302,7 @@ actor RailwayAPIClient {
         )
 
         if let errors = response.errors, !errors.isEmpty {
-            throw RailwayAPIError.graphQLErrors(errors)
+            throw RailwayAPIError.graphQLErrors(errors.map(\.message))
         }
     }
 
@@ -318,8 +338,13 @@ actor RailwayAPIClient {
         let (data, response) = try await URLSession.shared.data(for: request)
 
         if let httpResponse = response as? HTTPURLResponse {
-            if httpResponse.statusCode == 401 {
+            switch httpResponse.statusCode {
+            case 401:
                 throw RailwayAPIError.invalidToken
+            case 429:
+                throw RailwayAPIError.rateLimited
+            default:
+                break
             }
         }
 
@@ -327,7 +352,7 @@ actor RailwayAPIClient {
             let decoder = JSONDecoder()
             return try decoder.decode(T.self, from: data)
         } catch {
-            throw RailwayAPIError.decodingError(error)
+            throw RailwayAPIError.decodingError(error.localizedDescription)
         }
     }
 }
