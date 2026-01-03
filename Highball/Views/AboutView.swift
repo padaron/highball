@@ -8,9 +8,9 @@ struct AboutView: View {
             VStack(spacing: 24) {
                 // App icon and name
                 VStack(spacing: 12) {
-                    Image(systemName: "train.side.front.car")
-                        .font(.system(size: 64))
-                        .foregroundStyle(.green)
+                    Image(nsImage: NSApp.applicationIconImage)
+                        .resizable()
+                        .frame(width: 80, height: 80)
 
                     Text("Highball")
                         .font(.largeTitle)
