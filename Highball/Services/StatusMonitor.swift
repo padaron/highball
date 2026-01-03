@@ -50,7 +50,9 @@ final class StatusMonitor: ObservableObject {
 
     private var projectId: String?
     private var projectName: String?
+    private var environmentId: String?
     private var serviceIds: [String] = []
+    private var hasAttemptedEnvMigration = false
 
     // Track previous statuses for notification diffing
     private var previousStatuses: [String: DeploymentStatus] = [:]
@@ -64,32 +66,49 @@ final class StatusMonitor: ObservableObject {
 
     // MARK: - Public Methods
 
-    func configure(token: String, projectId: String, projectName: String, serviceIds: [String]) async {
+    func configure(token: String, projectId: String, projectName: String, environmentId: String?, serviceIds: [String]) async {
         // Save token to Keychain
         try? KeychainManager.saveToken(token)
 
         self.apiClient = RailwayAPIClient(token: token)
         self.projectId = projectId
         self.projectName = projectName
+        self.environmentId = environmentId
         self.serviceIds = serviceIds
         self.isConfigured = true
 
         saveConfiguration()
-        await refresh()
+        await refresh(showLoading: true)
         startPolling()
     }
 
-    func refresh() async {
+    func refresh(showLoading: Bool = false) async {
         guard let apiClient, !serviceIds.isEmpty else { return }
 
-        isLoading = true
+        // Auto-migrate: fetch environmentId if we don't have one (only try once)
+        if environmentId == nil, !hasAttemptedEnvMigration, let projectId {
+            hasAttemptedEnvMigration = true
+            do {
+                if let project = try await apiClient.fetchProject(projectId: projectId) {
+                    self.environmentId = project.productionEnvironmentId
+                    saveConfiguration()
+                }
+            } catch {
+                // Continue without environment filtering if fetch fails
+            }
+        }
+
+        // Only show loading indicator for manual refreshes, not background polling
+        if showLoading {
+            isLoading = true
+        }
 
         var updatedServices: [MonitoredService] = []
         var fetchError: String?
 
         for serviceId in serviceIds {
             do {
-                if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId) {
+                if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId, environmentId: environmentId) {
                     let existingService = services.first(where: { $0.id == serviceId })
 
                     let service = MonitoredService(
@@ -135,10 +154,26 @@ final class StatusMonitor: ObservableObject {
             }
         }
 
-        self.services = updatedServices
-        self.lastError = fetchError
+        // Only update if changed to avoid unnecessary SwiftUI re-renders
+        if !servicesEqual(services, updatedServices) {
+            self.services = updatedServices
+        }
+        if self.lastError != fetchError {
+            self.lastError = fetchError
+        }
+        if showLoading {
+            isLoading = false
+        }
+    }
 
-        isLoading = false
+    private func servicesEqual(_ lhs: [MonitoredService], _ rhs: [MonitoredService]) -> Bool {
+        guard lhs.count == rhs.count else { return false }
+        for (l, r) in zip(lhs, rhs) {
+            if l.id != r.id || l.status != r.status || l.deploymentId != r.deploymentId {
+                return false
+            }
+        }
+        return true
     }
 
     func discoverServices(token: String) async throws -> [(project: Project, services: [Service])] {
@@ -180,7 +215,7 @@ final class StatusMonitor: ObservableObject {
         guard let apiClient, let deploymentId = service.deploymentId else { return }
         try await apiClient.restartDeployment(deploymentId: deploymentId)
         // Refresh to get updated status
-        await refresh()
+        await refresh(showLoading: true)
     }
 
     /// Redeploy a service (triggers new build)
@@ -188,13 +223,14 @@ final class StatusMonitor: ObservableObject {
         guard let apiClient, let deploymentId = service.deploymentId else { return }
         try await apiClient.redeployDeployment(deploymentId: deploymentId)
         // Refresh to get updated status
-        await refresh()
+        await refresh(showLoading: true)
     }
 
     func reset() {
         stop()
         try? KeychainManager.deleteToken()
         UserDefaults.standard.removeObject(forKey: "projectId")
+        UserDefaults.standard.removeObject(forKey: "environmentId")
         UserDefaults.standard.removeObject(forKey: "serviceIds")
         UserDefaults.standard.removeObject(forKey: "serviceNames")
         UserDefaults.standard.removeObject(forKey: "deploymentHistory")
@@ -226,6 +262,7 @@ final class StatusMonitor: ObservableObject {
            let token = KeychainManager.getToken() {
             self.projectId = projectId
             self.projectName = defaults.string(forKey: "projectName")
+            self.environmentId = defaults.string(forKey: "environmentId")
             self.serviceIds = serviceIds
             self.apiClient = RailwayAPIClient(token: token)
             self.isConfigured = true
@@ -247,7 +284,7 @@ final class StatusMonitor: ObservableObject {
             }
 
             Task {
-                await refresh()
+                await refresh(showLoading: true)
                 startPolling()
             }
         }
@@ -257,6 +294,7 @@ final class StatusMonitor: ObservableObject {
         let defaults = UserDefaults.standard
         defaults.set(projectId, forKey: "projectId")
         defaults.set(projectName, forKey: "projectName")
+        defaults.set(environmentId, forKey: "environmentId")
         defaults.set(serviceIds, forKey: "serviceIds")
 
         let serviceNames = Dictionary(uniqueKeysWithValues: services.map { ($0.id, $0.serviceName) })

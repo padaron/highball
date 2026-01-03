@@ -279,6 +279,7 @@ struct OnboardingView: View {
                 token: tokenInput,
                 projectId: projectId,
                 projectName: project.project.name,
+                environmentId: project.project.productionEnvironmentId,
                 serviceIds: serviceIds
             )
 

@@ -142,7 +142,7 @@ struct StatusDropdownView: View {
             VStack(spacing: 0) {
                 Button {
                     Task {
-                        await monitor.refresh()
+                        await monitor.refresh(showLoading: true)
                     }
                 } label: {
                     HStack {

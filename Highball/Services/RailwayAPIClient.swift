@@ -69,6 +69,14 @@ actor RailwayAPIClient {
                 }
               }
             }
+            environments {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
           }
         }
       }
@@ -99,20 +107,29 @@ actor RailwayAPIClient {
             }
           }
         }
+        environments {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
       }
     }
     """
 
     private static let serviceDeploymentsQuery = """
-    query ServiceDeployments($serviceId: String!) {
-      service(id: $serviceId) {
-        deployments(first: 1) {
-          edges {
-            node {
-              id
-              status
-              createdAt
-            }
+    query ServiceDeployments($serviceId: String!, $environmentId: String) {
+      deployments(
+        first: 1
+        input: { serviceId: $serviceId, environmentId: $environmentId }
+      ) {
+        edges {
+          node {
+            id
+            status
+            createdAt
           }
         }
       }
@@ -199,10 +216,27 @@ actor RailwayAPIClient {
         return [project]
     }
 
-    func fetchServiceDeployment(serviceId: String) async throws -> Deployment? {
-        let variables: [String: Any] = ["serviceId": serviceId]
+    func fetchProject(projectId: String) async throws -> Project? {
+        let response: GraphQLResponse<ProjectByIdData> = try await execute(
+            query: Self.projectByIdQuery,
+            variables: ["id": projectId],
+            queryName: "Project"
+        )
 
-        let response: GraphQLResponse<ServiceDeploymentsData> = try await execute(
+        if let errors = response.errors, !errors.isEmpty {
+            throw RailwayAPIError.graphQLErrors(errors)
+        }
+
+        return response.data?.project
+    }
+
+    func fetchServiceDeployment(serviceId: String, environmentId: String?) async throws -> Deployment? {
+        var variables: [String: Any] = ["serviceId": serviceId]
+        if let environmentId {
+            variables["environmentId"] = environmentId
+        }
+
+        let response: GraphQLResponse<DeploymentsData> = try await execute(
             query: Self.serviceDeploymentsQuery,
             variables: variables,
             queryName: "ServiceDeployments"
@@ -212,7 +246,7 @@ actor RailwayAPIClient {
             throw RailwayAPIError.graphQLErrors(errors)
         }
 
-        return response.data?.service?.deployments.edges.first?.node
+        return response.data?.deployments.edges.first?.node
     }
 
     func validateToken() async throws -> Bool {

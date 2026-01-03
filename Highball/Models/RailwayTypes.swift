@@ -30,6 +30,26 @@ struct Project: Decodable, Identifiable {
     let id: String
     let name: String
     let services: ServiceConnection
+    let environments: RailwayEnvironmentConnection?
+
+    var productionEnvironmentId: String? {
+        // Look for "production" environment first, then fall back to first available
+        let envs = environments?.edges.map(\.node) ?? []
+        return envs.first(where: { $0.name.lowercased() == "production" })?.id ?? envs.first?.id
+    }
+}
+
+struct RailwayEnvironmentConnection: Decodable {
+    let edges: [RailwayEnvironmentEdge]
+}
+
+struct RailwayEnvironmentEdge: Decodable {
+    let node: RailwayEnvironment
+}
+
+struct RailwayEnvironment: Decodable, Identifiable {
+    let id: String
+    let name: String
 }
 
 struct ServiceConnection: Decodable {
@@ -64,6 +84,11 @@ struct ProjectByIdData: Decodable {
 
 // MARK: - Deployments Query Response
 
+struct DeploymentsData: Decodable {
+    let deployments: DeploymentConnection
+}
+
+// Legacy: kept for potential future use
 struct ServiceDeploymentsData: Decodable {
     let service: ServiceWithDeployments?
 }
