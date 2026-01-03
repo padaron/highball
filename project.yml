@@ -36,3 +36,5 @@ targets:
       path: Highball/Highball.entitlements
     info:
       path: Highball/Info.plist
+      properties:
+        LSUIElement: true
