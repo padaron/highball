@@ -108,7 +108,7 @@ final class StatusMonitor: ObservableObject {
 
         for serviceId in serviceIds {
             do {
-                if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId, environmentId: environmentId) {
+                if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId) {
                     let existingService = services.first(where: { $0.id == serviceId })
 
                     let service = MonitoredService(

@@ -120,16 +120,15 @@ actor RailwayAPIClient {
     """
 
     private static let serviceDeploymentsQuery = """
-    query ServiceDeployments($serviceId: String!, $environmentId: String) {
-      deployments(
-        first: 1
-        input: { serviceId: $serviceId, environmentId: $environmentId }
-      ) {
-        edges {
-          node {
-            id
-            status
-            createdAt
+    query ServiceDeployments($serviceId: String!) {
+      service(id: $serviceId) {
+        deployments(first: 1) {
+          edges {
+            node {
+              id
+              status
+              createdAt
+            }
           }
         }
       }
@@ -230,13 +229,10 @@ actor RailwayAPIClient {
         return response.data?.project
     }
 
-    func fetchServiceDeployment(serviceId: String, environmentId: String?) async throws -> Deployment? {
-        var variables: [String: Any] = ["serviceId": serviceId]
-        if let environmentId {
-            variables["environmentId"] = environmentId
-        }
+    func fetchServiceDeployment(serviceId: String) async throws -> Deployment? {
+        let variables: [String: Any] = ["serviceId": serviceId]
 
-        let response: GraphQLResponse<DeploymentsData> = try await execute(
+        let response: GraphQLResponse<ServiceDeploymentsData> = try await execute(
             query: Self.serviceDeploymentsQuery,
             variables: variables,
             queryName: "ServiceDeployments"
@@ -246,7 +242,7 @@ actor RailwayAPIClient {
             throw RailwayAPIError.graphQLErrors(errors)
         }
 
-        return response.data?.deployments.edges.first?.node
+        return response.data?.service?.deployments.edges.first?.node
     }
 
     func validateToken() async throws -> Bool {
