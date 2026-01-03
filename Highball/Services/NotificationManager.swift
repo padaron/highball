@@ -37,6 +37,17 @@ final class NotificationManager: ObservableObject {
         Task {
             await checkAuthorization()
         }
+
+        // Re-check authorization when app becomes active (e.g., after returning from System Settings)
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                await self?.checkAuthorization()
+            }
+        }
     }
 
     func requestAuthorization() async {
