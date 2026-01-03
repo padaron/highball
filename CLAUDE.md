@@ -14,7 +14,7 @@ Highball is a macOS menu bar app for monitoring Railway deployments. Built with 
 
 | | |
 |---|---|
-| **Version** | 2.0 |
+| **Version** | 2.2 |
 | **Status** | Active |
 | **Last Updated** | 2025-01-03 |
 | **Owner** | Ron |
@@ -23,6 +23,8 @@ Highball is a macOS menu bar app for monitoring Railway deployments. Built with 
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.2 | 2025-01-03 | Added `checkpoint` command (Section 14) - single-word GitHub sync verification |
+| 2.1 | 2025-01-03 | Added CLAUDE.md integration (Section 13) - discuss modifications, save agreed process |
 | 2.0 | 2025-01-03 | Added multi-session coordination (Section 10), screenshot handling workflow (Section 2), `in-progress` label for parallel work |
 | 1.0 | 2025-01-03 | Initial spec: issues-first workflow, branch naming, conventional commits, PR requirements, documentation location guidelines |
 
@@ -349,6 +351,94 @@ Direct commits to `main` acceptable only for:
 **Priority**: `P0-critical`, `P1-high`, `P2-medium`, `P3-low`
 
 **Status**: `needs-triage`, `in-progress`, `blocked`, `help-wanted`, `good-first-issue`
+
+---
+
+### 13. CLAUDE.md Integration
+
+This spec is a starting template. Each project may need modifications based on its specific requirements, tech stack, or team preferences.
+
+#### Before Implementing This Workflow
+
+When first applying this spec to a project, Claude Code should:
+
+1. **Review the project context** - tech stack, existing conventions, team size
+2. **Propose modifications** - suggest adaptations before implementing
+3. **Discuss with user** - get explicit agreement on any deviations
+4. **Document in CLAUDE.md** - save the agreed-upon workflow
+
+#### Updating the Workflow
+
+If workflow changes are needed mid-project:
+
+1. **Discuss the change** - explain rationale, get user agreement
+2. **Update CLAUDE.md** - document the new process
+3. **Note the change** - add a comment in CLAUDE.md with date and reason
+
+#### Why This Matters
+
+- **Persistence**: Claude Code reads CLAUDE.md at session start - agreed rules carry forward
+- **Consistency**: Multiple sessions follow the same customized workflow
+- **Transparency**: User always knows what rules Claude Code is following
+- **Adaptability**: Easy to evolve the process as the project matures
+
+---
+
+### 14. Checkpoint Command
+
+When the user types **`checkpoint`**, Claude Code must verify GitHub is in sync before proceeding.
+
+#### What Claude Code Does on `checkpoint`
+
+Run these checks and report status:
+
+```bash
+# 1. Check for uncommitted changes
+git status --porcelain
+
+# 2. Check for unpushed commits
+git log origin/main..HEAD --oneline
+
+# 3. Check current branch (should be main if work is complete)
+git branch --show-current
+
+# 4. Check for open PRs that should be merged
+gh pr list --state open --author @me
+
+# 5. Check for issues still marked in-progress
+gh issue list --label "in-progress" --assignee @me
+```
+
+#### Response Format
+
+**All clear:**
+```
+✓ CHECKPOINT PASSED
+- No uncommitted changes
+- No unpushed commits
+- On main branch
+- No open PRs
+- No in-progress issues
+Ready to proceed.
+```
+
+**Issues found:**
+```
+⚠ CHECKPOINT FAILED
+- 2 uncommitted files (src/App.swift, README.md)
+- 1 unpushed commit
+- Still on branch feat/42-dark-mode
+- PR #18 still open
+
+Fix these before moving on?
+```
+
+#### When to Use
+
+- Before switching to a new feature/task
+- Before ending a session
+- Before starting parallel sessions
+- Anytime you want to verify clean state
 
 ---
 
