@@ -170,6 +170,20 @@ struct StatusDropdownView: View {
                 .padding(.vertical, 6)
                 .contentShape(Rectangle())
 
+                Button {
+                    openAbout()
+                } label: {
+                    HStack {
+                        Image(systemName: "info.circle")
+                        Text("About Highball")
+                        Spacer()
+                    }
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .contentShape(Rectangle())
+
                 Divider()
 
                 Button {
@@ -188,6 +202,11 @@ struct StatusDropdownView: View {
             }
         }
         .frame(width: 260)
+    }
+
+    private func openAbout() {
+        NSApp.activate(ignoringOtherApps: true)
+        openWindow(id: "about")
     }
 
     private func openSettings() {

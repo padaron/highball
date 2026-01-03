@@ -21,7 +21,9 @@
 		D065686D2CD149BAA1941F84 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4212C305B621D99BF3681A /* SettingsView.swift */; };
 		DDCCBB25DED23C18A1B9BA7A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52EB4D38A7457B3D72C199D /* OnboardingView.swift */; };
 		DE0239C5164150CF5B57B6CA /* StatusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB2CB8C43B302C41A13F18 /* StatusMonitor.swift */; };
+		E21AB3DAD1F1592D230FA142 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8D7C66EC93DB8822B36EBD9 /* Assets.xcassets */; };
 		E2EF84C181FAFF8F1490D0AE /* StatusDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524A549910AFBCF6DC32C8E2 /* StatusDropdownView.swift */; };
+		F0FE8309D338579AE37F86F5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59426F470A04EDA35AA9D27 /* AboutView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,8 +39,10 @@
 		912A91BF1CA1767076DD4B04 /* Highball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Highball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		A5085D94ECA6C68B4672426F /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
+		B59426F470A04EDA35AA9D27 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		C55F773153D568A4F2151D5D /* Highball.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Highball.entitlements; sourceTree = "<group>"; };
 		D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRowView.swift; sourceTree = "<group>"; };
+		D8D7C66EC93DB8822B36EBD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E09E3253FA0724AEC85E1353 /* RailwayTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailwayTypes.swift; sourceTree = "<group>"; };
 		E52EB4D38A7457B3D72C199D /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		FAA80F796B786ED80EFF6300 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -80,6 +84,7 @@
 		4C5B31C34CBC133A984A14CA /* Highball */ = {
 			isa = PBXGroup;
 			children = (
+				D8D7C66EC93DB8822B36EBD9 /* Assets.xcassets */,
 				C55F773153D568A4F2151D5D /* Highball.entitlements */,
 				722AEF388A8833C636D9817B /* HighballApp.swift */,
 				FAA80F796B786ED80EFF6300 /* Info.plist */,
@@ -110,6 +115,7 @@
 		A904FFB316C74B4CD14D9712 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B59426F470A04EDA35AA9D27 /* AboutView.swift */,
 				47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */,
 				E52EB4D38A7457B3D72C199D /* OnboardingView.swift */,
 				D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */,
@@ -127,6 +133,7 @@
 			buildConfigurationList = 72932E7D6FE9CB56E448D1B5 /* Build configuration list for PBXNativeTarget "Highball" */;
 			buildPhases = (
 				4E200EEE9D042D12E96F8CAA /* Sources */,
+				5ECFE7FA0D396B00689921CF /* Resources */,
 				39DF83AEE51D2D69CD46BDA9 /* Frameworks */,
 			);
 			buildRules = (
@@ -177,11 +184,23 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		5ECFE7FA0D396B00689921CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E21AB3DAD1F1592D230FA142 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4E200EEE9D042D12E96F8CAA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0FE8309D338579AE37F86F5 /* AboutView.swift in Sources */,
 				994BEB0933F875ACA0DF97E1 /* HighballApp.swift in Sources */,
 				4A42745030A3207C86A81785 /* HotKeyManager.swift in Sources */,
 				212636684FE7D8B58FBD2597 /* KeychainManager.swift in Sources */,
