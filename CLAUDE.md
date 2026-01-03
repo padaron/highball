@@ -12,7 +12,7 @@ Highball is a macOS menu bar app for monitoring Railway deployments. Built with 
 
 ## GitHub Workflow
 
-Follow the GitHub Workflow Spec at `~/projects/resources/docs/GITHUB-WORKFLOW.md` (v2.17)
+Follow the GitHub Workflow Spec at `~/projects/resources/docs/GITHUB-WORKFLOW.md` (v2.18)
 
 Check version on `checkpoint` command.
 
