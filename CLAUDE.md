@@ -14,7 +14,7 @@ Highball is a macOS menu bar app for monitoring Railway deployments. Built with 
 
 | | |
 |---|---|
-| **Version** | 2.2 |
+| **Version** | 2.6 |
 | **Status** | Active |
 | **Last Updated** | 2025-01-03 |
 | **Owner** | Ron |
@@ -23,6 +23,10 @@ Highball is a macOS menu bar app for monitoring Railway deployments. Built with 
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.6 | 2025-01-03 | Updated screenshot paths, enhanced checkpoint with issue coverage |
+| 2.5 | 2025-01-03 | Enhanced checkpoint to verify all work has corresponding GitHub issues |
+| 2.4 | 2025-01-03 | Added issue completeness requirements - mandatory fields for each issue type |
+| 2.3 | 2025-01-03 | Added `/usage` reporting to checkpoint command |
 | 2.2 | 2025-01-03 | Added `checkpoint` command (Section 14) - single-word GitHub sync verification |
 | 2.1 | 2025-01-03 | Added CLAUDE.md integration (Section 13) - discuss modifications, save agreed process |
 | 2.0 | 2025-01-03 | Added multi-session coordination (Section 10), screenshot handling workflow (Section 2), `in-progress` label for parallel work |
@@ -30,35 +34,58 @@ Highball is a macOS menu bar app for monitoring Railway deployments. Built with 
 
 ### Core Principle
 
-GitHub is the single source of truth for all features, bugs, specs, and roadmap. All code changes flow through GitHub Issues and PRs. No direct commits to main. Every change starts with an issue.
+GitHub is the single source of truth for all features, bugs, specs, and roadmap. All code changes flow through GitHub Issues and PRs. No direct commits to main. **Every change starts with an issue.**
+
+#### The Golden Rule
+
+**No code without an issue.** Before writing any code, there must be a GitHub issue that:
+- Documents what problem is being solved or what feature is being added
+- Will be referenced in commits and PRs
+- Can be understood by another session without additional context
+
+If you're about to write code and there's no issue, **stop and create one first.**
 
 ---
 
 ### 1. Issues First
 
-Before writing any code, create a GitHub Issue for:
+Before writing any code, create a GitHub Issue. **Every issue must be self-contained** - another Claude Code session should understand the full context without asking questions.
 
-| Type | Label | Requirements |
-|------|-------|--------------|
-| Bugs | `bug` | Reproduction steps, expected vs actual behavior, screenshots |
-| Features | `enhancement` | Desired outcome, acceptance criteria |
-| Refactors | `refactor` | What's changing and why |
-| Chores | `chore` | Dependencies, config, documentation |
+#### Issue Completeness Rule
+
+**Never create a partial issue.** If you don't have enough information, ask the user before creating the issue.
+
+#### Bug Reports - Required Fields
+
+- **Title**: Action-oriented (e.g., "Fix crash on empty form submission")
+- **Steps to Reproduce**: Numbered, specific steps anyone can follow
+- **Expected Behavior**: What should happen
+- **Actual Behavior**: What actually happens (include error messages verbatim)
+- **Environment**: macOS version, app version
+
+#### Feature Requests - Required Fields
+
+- **Title**: User-focused outcome (e.g., "Add dark mode support")
+- **User Story**: Who wants this and why
+- **Acceptance Criteria**: Specific, testable conditions for "done"
+- **Scope**: What's included and explicitly what's NOT included
+
+#### Refactors - Required Fields
+
+- **Title**: What's being refactored (e.g., "Refactor API client to use async/await")
+- **Current State**: What exists now and why it's problematic
+- **Proposed Change**: What will change
+- **Files Affected**: List of files/modules
+- **Risk Assessment**: What could break, how to verify
+
+#### Chores - Required Fields
+
+- **Title**: Specific task (e.g., "Update Swift to 5.9")
+- **What**: Specific change being made
+- **Why**: Reason for the change
+- **Verification**: How to confirm it worked
 
 **Issue titles**: Concise and actionable (e.g., "Fix crash on empty input" not "Bug found")
-
-```bash
-# Create issue
-gh issue create --title "Fix: null pointer on empty input" --label "bug" --body "## Steps to reproduce
-1. Open app
-2. Submit empty form
-
-## Expected
-Validation error
-
-## Actual
-Crash"
-```
 
 ---
 
@@ -386,7 +413,7 @@ If workflow changes are needed mid-project:
 
 ### 14. Checkpoint Command
 
-When the user types **`checkpoint`**, Claude Code must verify GitHub is in sync before proceeding.
+When the user types **`checkpoint`**, Claude Code must verify GitHub is the complete source of truth before proceeding.
 
 #### What Claude Code Does on `checkpoint`
 
@@ -407,7 +434,22 @@ gh pr list --state open --author @me
 
 # 5. Check for issues still marked in-progress
 gh issue list --label "in-progress" --assignee @me
+
+# 6. Check remaining usage capacity
+/usage
 ```
+
+#### Critical: Issue Coverage Check
+
+**For any uncommitted or session work, verify a GitHub issue exists that documents:**
+- What problem was solved or feature was added
+- The approach/solution taken
+- Any decisions made during implementation
+
+If work was done without a corresponding issue:
+1. **Stop and create the issue first** with full details (see Section 1)
+2. Then commit referencing that issue number
+3. Report this gap in the checkpoint response
 
 #### Response Format
 
@@ -419,6 +461,9 @@ gh issue list --label "in-progress" --assignee @me
 - On main branch
 - No open PRs
 - No in-progress issues
+- All work documented in issues
+
+⏱ USAGE: X% remaining | Resets in Xh Xm
 Ready to proceed.
 ```
 
@@ -430,7 +475,17 @@ Ready to proceed.
 - Still on branch feat/42-dark-mode
 - PR #18 still open
 
+⏱ USAGE: X% remaining | Resets in Xh Xm
 Fix these before moving on?
+```
+
+**Undocumented work found:**
+```
+⚠ CHECKPOINT FAILED - UNDOCUMENTED WORK
+Work done this session without GitHub issue:
+- [list of changes]
+
+Creating issue to document this work before committing...
 ```
 
 #### When to Use
