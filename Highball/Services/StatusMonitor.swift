@@ -11,6 +11,7 @@ final class StatusMonitor: ObservableObject {
     @Published private(set) var lastError: String?
     @Published private(set) var isConfigured = false
     @Published private(set) var history: [DeploymentHistoryEntry] = []
+    @Published private(set) var apps: [MonitoredApp] = []
 
     var displayProjectName: String {
         projectName ?? "Project"
@@ -21,8 +22,20 @@ final class StatusMonitor: ObservableObject {
     // MARK: - Computed Properties
 
     var aggregateStatus: DeploymentStatus {
-        guard !services.isEmpty else { return .unknown }
-        return services.min(by: { $0.status.priority < $1.status.priority })?.status ?? .unknown
+        var statusesToConsider: [DeploymentStatus] = []
+
+        // Add app aggregate statuses
+        for app in apps {
+            statusesToConsider.append(app.aggregateStatus(services: services))
+        }
+
+        // Add ungrouped service statuses
+        let groupedServiceIds = Set(apps.flatMap(\.serviceIds))
+        let ungroupedServices = services.filter { !groupedServiceIds.contains($0.id) }
+        statusesToConsider.append(contentsOf: ungroupedServices.map(\.status))
+
+        guard !statusesToConsider.isEmpty else { return .unknown }
+        return statusesToConsider.min(by: { $0.priority < $1.priority }) ?? .unknown
     }
 
     var menuBarIcon: String {
@@ -31,7 +44,7 @@ final class StatusMonitor: ObservableObject {
             return "circle.fill"
         case .building, .deploying, .initializing, .waiting:
             return "circle.dotted"
-        case .failed, .crashed:
+        case .failed, .crashed, .error:
             return "exclamationmark.circle.fill"
         default:
             return "circle"
@@ -58,6 +71,7 @@ final class StatusMonitor: ObservableObject {
 
     // Track previous statuses for notification diffing
     private var previousStatuses: [String: DeploymentStatus] = [:]
+    private var previousAppStatuses: [UUID: DeploymentStatus] = [:]
 
     // MARK: - Initialization
 
@@ -112,7 +126,7 @@ final class StatusMonitor: ObservableObject {
 
         for serviceId in serviceIds {
             do {
-                if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId) {
+                if let deployment = try await apiClient.fetchServiceDeployment(serviceId: serviceId, environmentId: environmentId) {
                     let existingService = services.first(where: { $0.id == serviceId })
 
                     let service = MonitoredService(
@@ -160,6 +174,22 @@ final class StatusMonitor: ObservableObject {
             } catch {
                 fetchError = error.localizedDescription
             }
+        }
+
+        // Check app-level status changes
+        for app in apps {
+            let currentAppStatus = app.aggregateStatus(services: updatedServices)
+            let oldAppStatus = previousAppStatuses[app.id]
+
+            if let old = oldAppStatus, old != currentAppStatus {
+                NotificationManager.shared.notifyAppStatusChange(
+                    app: app,
+                    services: app.getServices(from: updatedServices),
+                    oldStatus: old,
+                    newStatus: currentAppStatus
+                )
+            }
+            previousAppStatuses[app.id] = currentAppStatus
         }
 
         // Handle rate limit backoff
@@ -241,6 +271,36 @@ final class StatusMonitor: ObservableObject {
         await refresh(showLoading: true)
     }
 
+    // MARK: - App Management
+
+    func createApp(name: String, serviceIds: [String]) {
+        let app = MonitoredApp(name: name, serviceIds: serviceIds)
+        apps.append(app)
+        saveConfiguration()
+    }
+
+    func updateApp(_ appId: UUID, name: String?, serviceIds: [String]?) {
+        guard let index = apps.firstIndex(where: { $0.id == appId }) else { return }
+        if let name = name {
+            apps[index].name = name
+        }
+        if let serviceIds = serviceIds {
+            apps[index].serviceIds = serviceIds
+        }
+        saveConfiguration()
+    }
+
+    func deleteApp(_ appId: UUID) {
+        apps.removeAll { $0.id == appId }
+        previousAppStatuses.removeValue(forKey: appId)
+        saveConfiguration()
+    }
+
+    func getUngroupedServices() -> [MonitoredService] {
+        let groupedServiceIds = Set(apps.flatMap(\.serviceIds))
+        return services.filter { !groupedServiceIds.contains($0.id) }
+    }
+
     func reset() {
         stop()
         try? KeychainManager.deleteToken()
@@ -249,10 +309,13 @@ final class StatusMonitor: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "serviceIds")
         UserDefaults.standard.removeObject(forKey: "serviceNames")
         UserDefaults.standard.removeObject(forKey: "deploymentHistory")
+        UserDefaults.standard.removeObject(forKey: "monitoredApps")
         services = []
         history = []
+        apps = []
         isConfigured = false
         previousStatuses = [:]
+        previousAppStatuses = [:]
     }
 
     // MARK: - Private Methods
@@ -313,6 +376,14 @@ final class StatusMonitor: ObservableObject {
                 }
             }
 
+            // Load apps
+            if let appsData = defaults.data(forKey: "monitoredApps"),
+               let loadedApps = try? JSONDecoder().decode([MonitoredApp].self, from: appsData) {
+                self.apps = loadedApps
+            } else {
+                self.apps = []
+            }
+
             Task {
                 await refresh(showLoading: true)
                 startPolling()
@@ -329,6 +400,11 @@ final class StatusMonitor: ObservableObject {
 
         let serviceNames = Dictionary(uniqueKeysWithValues: services.map { ($0.id, $0.serviceName) })
         defaults.set(serviceNames, forKey: "serviceNames")
+
+        // Save apps
+        if let appsData = try? JSONEncoder().encode(apps) {
+            defaults.set(appsData, forKey: "monitoredApps")
+        }
     }
 
     private func loadHistory() {

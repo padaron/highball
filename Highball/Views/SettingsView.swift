@@ -28,13 +28,19 @@ struct SettingsView: View {
                 }
                 .tag("notifications")
 
+            AppGroupingView(monitor: monitor)
+                .tabItem {
+                    Label("Apps", systemImage: "square.stack.3d.up")
+                }
+                .tag("apps")
+
             connectionTab
                 .tabItem {
                     Label("Connection", systemImage: "network")
                 }
                 .tag("connection")
         }
-        .frame(width: 450, height: 320)
+        .frame(width: 450, height: 400)
     }
 
     // MARK: - General Tab
@@ -136,6 +142,7 @@ struct SettingsView: View {
 
             Section {
                 Toggle("Play sound on failure", isOn: $notifications.playSoundOnFailure)
+                Toggle("Train whistle on success", isOn: $notifications.playSoundOnSuccess)
             } header: {
                 Text("Sound")
             }

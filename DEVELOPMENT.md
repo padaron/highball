@@ -90,6 +90,13 @@ open Highball.xcodeproj
 
 - [KeychainAccess](https://github.com/kishikawakatsumi/KeychainAccess) - Keychain wrapper for secure token storage
 
+### Audio Resources
+
+Custom sounds are stored in `Highball/Resources/` and loaded via `NSSound` for playback.
+
+**Attributions:**
+- Train whistle sound: [Free Sounds Library](http://www.freesoundslibrary.com) - Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
 ## Key Implementation Details
 
 ### Token Storage

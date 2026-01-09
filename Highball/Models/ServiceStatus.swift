@@ -7,6 +7,7 @@ enum DeploymentStatus: String, Codable {
     case deploying = "DEPLOYING"
     case failed = "FAILED"
     case crashed = "CRASHED"
+    case error = "ERROR"
     case removed = "REMOVED"
     case removing = "REMOVING"
     case initializing = "INITIALIZING"
@@ -27,6 +28,7 @@ enum DeploymentStatus: String, Codable {
         case .deploying: "Deploying"
         case .failed: "Failed"
         case .crashed: "Crashed"
+        case .error: "Error"
         case .removed: "Removed"
         case .removing: "Removing"
         case .initializing: "Initializing"
@@ -42,6 +44,7 @@ enum DeploymentStatus: String, Codable {
         case .building: Color(red: 0.8, green: 0.6, blue: 1.0) // light purple
         case .deploying, .initializing, .waiting: Color(red: 0.4, green: 0.7, blue: 1.0) // light blue
         case .failed, .crashed: .red
+        case .error: .orange
         case .removed, .removing, .sleeping: .gray
         case .unknown: .gray
         }
@@ -83,7 +86,7 @@ enum DeploymentStatus: String, Codable {
 
     var isFailed: Bool {
         switch self {
-        case .failed, .crashed:
+        case .failed, .crashed, .error:
             return true
         default:
             return false
@@ -94,7 +97,7 @@ enum DeploymentStatus: String, Codable {
     /// Order: failed > building > deploying > success
     var priority: Int {
         switch self {
-        case .failed, .crashed: 0      // worst - show first
+        case .failed, .crashed, .error: 0      // worst - show first
         case .building: 1               // building before deploying
         case .deploying, .initializing, .waiting: 2
         case .success: 3                // best - show last
@@ -240,5 +243,38 @@ struct DeploymentHistoryEntry: Identifiable, Codable {
         } else {
             return "\(seconds)s"
         }
+    }
+}
+
+struct MonitoredApp: Identifiable, Codable {
+    let id: UUID
+    var name: String
+    var serviceIds: [String]
+    let createdAt: Date
+
+    init(id: UUID = UUID(), name: String, serviceIds: [String]) {
+        self.id = id
+        self.name = name
+        self.serviceIds = serviceIds
+        self.createdAt = Date()
+    }
+}
+
+extension MonitoredApp {
+    /// Calculate aggregate status from services in this app
+    func aggregateStatus(services: [MonitoredService]) -> DeploymentStatus {
+        let appServices = services.filter { serviceIds.contains($0.id) }
+        guard !appServices.isEmpty else { return .unknown }
+        return appServices.min(by: { $0.status.priority < $1.status.priority })?.status ?? .unknown
+    }
+
+    /// Get services belonging to this app
+    func getServices(from allServices: [MonitoredService]) -> [MonitoredService] {
+        return allServices.filter { serviceIds.contains($0.id) }
+    }
+
+    /// Railway project URL
+    func railwayURL(projectId: String) -> URL? {
+        URL(string: "https://railway.com/project/\(projectId)")
     }
 }
