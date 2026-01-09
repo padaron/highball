@@ -7,6 +7,8 @@ final class NotificationManager: ObservableObject {
     static let shared = NotificationManager()
 
     @Published private(set) var isAuthorized = false
+    private var successSound: NSSound?
+    private var failureSound: NSSound?
 
     // Notification preferences (stored in UserDefaults)
     @Published var notifyOnSuccess: Bool {
@@ -24,6 +26,9 @@ final class NotificationManager: ObservableObject {
     @Published var playSoundOnFailure: Bool {
         didSet { UserDefaults.standard.set(playSoundOnFailure, forKey: "playSoundOnFailure") }
     }
+    @Published var playSoundOnSuccess: Bool {
+        didSet { UserDefaults.standard.set(playSoundOnSuccess, forKey: "playSoundOnSuccess") }
+    }
 
     private init() {
         // Load preferences with defaults (all enabled except sound)
@@ -33,6 +38,17 @@ final class NotificationManager: ObservableObject {
         self.notifyOnDeploying = defaults.object(forKey: "notifyOnDeploying") as? Bool ?? true
         self.notifyOnFailure = defaults.object(forKey: "notifyOnFailure") as? Bool ?? true
         self.playSoundOnFailure = defaults.object(forKey: "playSoundOnFailure") as? Bool ?? false
+        self.playSoundOnSuccess = defaults.object(forKey: "playSoundOnSuccess") as? Bool ?? false
+
+        // Load train whistle sound from bundle
+        if let soundURL = Bundle.main.url(forResource: "train_whistle", withExtension: "caf") {
+            self.successSound = NSSound(contentsOf: soundURL, byReference: true)
+        }
+
+        // Load failure sound from bundle
+        if let soundURL = Bundle.main.url(forResource: "failure_basso", withExtension: "caf") {
+            self.failureSound = NSSound(contentsOf: soundURL, byReference: true)
+        }
 
         Task {
             await checkAuthorization()
@@ -73,8 +89,14 @@ final class NotificationManager: ObservableObject {
             "url": service.railwayURL?.absoluteString ?? ""
         ]
 
+        // Play custom failure sound on failed deployment
         if newStatus.isFailed && playSoundOnFailure {
-            content.sound = .default
+            failureSound?.play()
+        }
+
+        // Play train whistle on successful deployment
+        if newStatus == .success && playSoundOnSuccess {
+            successSound?.play()
         }
 
         let request = UNNotificationRequest(
@@ -84,6 +106,66 @@ final class NotificationManager: ObservableObject {
         )
 
         UNUserNotificationCenter.current().add(request)
+    }
+
+    func notifyAppStatusChange(
+        app: MonitoredApp,
+        services: [MonitoredService],
+        oldStatus: DeploymentStatus,
+        newStatus: DeploymentStatus
+    ) {
+        guard isAuthorized else { return }
+        guard shouldNotify(for: newStatus) else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = statusTitle(for: newStatus, serviceName: app.name)
+        content.body = appStatusBody(for: newStatus, serviceCount: services.count)
+        content.categoryIdentifier = "APP_STATUS_CHANGE"
+
+        if let firstService = services.first {
+            content.userInfo = [
+                "appId": app.id.uuidString,
+                "projectId": firstService.projectId,
+                "url": app.railwayURL(projectId: firstService.projectId)?.absoluteString ?? ""
+            ]
+        }
+
+        // Play custom failure sound on failed deployment
+        if newStatus.isFailed && playSoundOnFailure {
+            failureSound?.play()
+        }
+
+        // Play train whistle on successful deployment
+        if newStatus == .success && playSoundOnSuccess {
+            successSound?.play()
+        }
+
+        let request = UNNotificationRequest(
+            identifier: "\(app.id.uuidString)-\(Date().timeIntervalSince1970)",
+            content: content,
+            trigger: nil
+        )
+
+        UNUserNotificationCenter.current().add(request)
+    }
+
+    private func appStatusBody(for status: DeploymentStatus, serviceCount: Int) -> String {
+        let serviceWord = serviceCount == 1 ? "service" : "services"
+
+        switch status {
+        case .success:
+            return "\(serviceCount) \(serviceWord) deployed successfully"
+        case .building:
+            return "\(serviceCount) \(serviceWord) building"
+        case .deploying:
+            return "\(serviceCount) \(serviceWord) deploying"
+        case .failed:
+            return "\(serviceCount) \(serviceWord) failed"
+        case .crashed:
+            return "\(serviceCount) \(serviceWord) crashed"
+        default:
+            return "Status: \(status.displayName)"
+        }
     }
 
     private func shouldNotify(for status: DeploymentStatus) -> Bool {
@@ -113,6 +195,8 @@ final class NotificationManager: ObservableObject {
             return "❌ \(serviceName) Failed"
         case .crashed:
             return "💥 \(serviceName) Crashed"
+        case .error:
+            return "⚠️ \(serviceName) Error"
         default:
             return "\(serviceName) Status Changed"
         }
@@ -130,6 +214,8 @@ final class NotificationManager: ObservableObject {
             return "Deployment failed - check Railway dashboard"
         case .crashed:
             return "Service crashed - check Railway dashboard"
+        case .error:
+            return "Service has errors - check Railway dashboard"
         default:
             return "Status: \(status.displayName)"
         }

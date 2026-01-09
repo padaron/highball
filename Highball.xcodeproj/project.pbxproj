@@ -12,25 +12,31 @@
 		212636684FE7D8B58FBD2597 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */; };
 		258CA386BD2AFCC55AFBD654 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */; };
 		3170852D8ABE10E71A691E89 /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50149BC4C44837FEAE4E10A1 /* LaunchAtLoginManager.swift */; };
+		3AA819832379A0029BF090DF /* AppGroupingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024C1B3E42E0E89754533073 /* AppGroupingView.swift */; };
 		4A42745030A3207C86A81785 /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5085D94ECA6C68B4672426F /* HotKeyManager.swift */; };
 		4DCE3DDAC095EE263924E031 /* RailwayAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5337F5C4F097B0BEE288B283 /* RailwayAPIClient.swift */; };
 		7F17EA0A994E943A1DA70FE8 /* RailwayTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09E3253FA0724AEC85E1353 /* RailwayTypes.swift */; };
 		8A228389BF88ECC33D9D2B04 /* ServiceRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */; };
 		96DCD94AF0531870A5C467E3 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 2D56CCDC79899C4A4A8B20A3 /* KeychainAccess */; };
 		994BEB0933F875ACA0DF97E1 /* HighballApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722AEF388A8833C636D9817B /* HighballApp.swift */; };
+		A9F3ABB47CE622BCD396B383 /* train_whistle.caf in Resources */ = {isa = PBXBuildFile; fileRef = 5048670954333034B957CEE2 /* train_whistle.caf */; };
 		D065686D2CD149BAA1941F84 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4212C305B621D99BF3681A /* SettingsView.swift */; };
 		DDCCBB25DED23C18A1B9BA7A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52EB4D38A7457B3D72C199D /* OnboardingView.swift */; };
 		DE0239C5164150CF5B57B6CA /* StatusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB2CB8C43B302C41A13F18 /* StatusMonitor.swift */; };
 		E21AB3DAD1F1592D230FA142 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8D7C66EC93DB8822B36EBD9 /* Assets.xcassets */; };
 		E2EF84C181FAFF8F1490D0AE /* StatusDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524A549910AFBCF6DC32C8E2 /* StatusDropdownView.swift */; };
+		EA6846BC257900561D1AFA7E /* failure_basso.caf in Resources */ = {isa = PBXBuildFile; fileRef = C22E63C1997C8720AFCA289B /* failure_basso.caf */; };
 		F0FE8309D338579AE37F86F5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59426F470A04EDA35AA9D27 /* AboutView.swift */; };
+		F487063EFB6A8ED737891EBE /* AppRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C6EBE8E749D6BDD92D8C75 /* AppRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		024C1B3E42E0E89754533073 /* AppGroupingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupingView.swift; sourceTree = "<group>"; };
 		0ECB2CB8C43B302C41A13F18 /* StatusMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMonitor.swift; sourceTree = "<group>"; };
 		2E34FC8F7607A8839C4675F9 /* ServiceStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceStatus.swift; sourceTree = "<group>"; };
 		47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarIcon.swift; sourceTree = "<group>"; };
 		50149BC4C44837FEAE4E10A1 /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
+		5048670954333034B957CEE2 /* train_whistle.caf */ = {isa = PBXFileReference; path = train_whistle.caf; sourceTree = "<group>"; };
 		524A549910AFBCF6DC32C8E2 /* StatusDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusDropdownView.swift; sourceTree = "<group>"; };
 		5337F5C4F097B0BEE288B283 /* RailwayAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailwayAPIClient.swift; sourceTree = "<group>"; };
 		6706B9756732A64C5C46E2D7 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -39,7 +45,9 @@
 		912A91BF1CA1767076DD4B04 /* Highball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Highball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		988A1DB0CF8CC0DD81B9BC00 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		A5085D94ECA6C68B4672426F /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
+		B0C6EBE8E749D6BDD92D8C75 /* AppRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRowView.swift; sourceTree = "<group>"; };
 		B59426F470A04EDA35AA9D27 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		C22E63C1997C8720AFCA289B /* failure_basso.caf */ = {isa = PBXFileReference; path = failure_basso.caf; sourceTree = "<group>"; };
 		C55F773153D568A4F2151D5D /* Highball.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Highball.entitlements; sourceTree = "<group>"; };
 		D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRowView.swift; sourceTree = "<group>"; };
 		D8D7C66EC93DB8822B36EBD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -89,6 +97,7 @@
 				722AEF388A8833C636D9817B /* HighballApp.swift */,
 				FAA80F796B786ED80EFF6300 /* Info.plist */,
 				937E7EEE275B9ED783E3D7AF /* Models */,
+				8D4E4A12BF30BFD464450ADC /* Resources */,
 				489DADCF058416B8A5B69BFD /* Services */,
 				A904FFB316C74B4CD14D9712 /* Views */,
 			);
@@ -101,6 +110,15 @@
 				912A91BF1CA1767076DD4B04 /* Highball.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8D4E4A12BF30BFD464450ADC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C22E63C1997C8720AFCA289B /* failure_basso.caf */,
+				5048670954333034B957CEE2 /* train_whistle.caf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		937E7EEE275B9ED783E3D7AF /* Models */ = {
@@ -116,6 +134,8 @@
 			isa = PBXGroup;
 			children = (
 				B59426F470A04EDA35AA9D27 /* AboutView.swift */,
+				024C1B3E42E0E89754533073 /* AppGroupingView.swift */,
+				B0C6EBE8E749D6BDD92D8C75 /* AppRowView.swift */,
 				47AFA8FB9BB5DC44A541ACCF /* MenuBarIcon.swift */,
 				E52EB4D38A7457B3D72C199D /* OnboardingView.swift */,
 				D8BEE86C0ECAC45C9FD95376 /* ServiceRowView.swift */,
@@ -158,7 +178,8 @@
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					BCC3DB170B702ECDB6E19757 = {
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = XTNY46KNDN;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -190,6 +211,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E21AB3DAD1F1592D230FA142 /* Assets.xcassets in Resources */,
+				EA6846BC257900561D1AFA7E /* failure_basso.caf in Resources */,
+				A9F3ABB47CE622BCD396B383 /* train_whistle.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +224,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0FE8309D338579AE37F86F5 /* AboutView.swift in Sources */,
+				3AA819832379A0029BF090DF /* AppGroupingView.swift in Sources */,
+				F487063EFB6A8ED737891EBE /* AppRowView.swift in Sources */,
 				994BEB0933F875ACA0DF97E1 /* HighballApp.swift in Sources */,
 				4A42745030A3207C86A81785 /* HotKeyManager.swift in Sources */,
 				212636684FE7D8B58FBD2597 /* KeychainManager.swift in Sources */,
@@ -345,9 +370,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Highball/Highball.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Ronald Clarkson (XTNY46KNDN)";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XTNY46KNDN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Highball/Info.plist;
@@ -369,9 +396,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Highball/Highball.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Ronald Clarkson (XTNY46KNDN)";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XTNY46KNDN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Highball/Info.plist;

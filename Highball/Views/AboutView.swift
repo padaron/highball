@@ -122,6 +122,25 @@ struct AboutView: View {
                     .buttonStyle(.link)
                 }
 
+                Divider()
+                    .padding(.horizontal, 40)
+
+                // Attributions
+                VStack(spacing: 8) {
+                    Text("Attributions")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+
+                    Button {
+                        openURL(URL(string: "http://www.freesoundslibrary.com")!)
+                    } label: {
+                        Text("Train whistle sound: Free Sounds Library (CC BY 4.0)")
+                            .font(.caption2)
+                    }
+                    .buttonStyle(.link)
+                }
+
                 Spacer()
 
                 Text("MIT License")

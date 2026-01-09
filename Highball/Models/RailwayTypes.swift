@@ -152,6 +152,15 @@ struct ServiceInstanceEdge: Decodable {
 struct ServiceInstance: Decodable {
     let serviceId: String
     let latestDeployment: Deployment?
+    let activeDeployments: [Deployment]?
+
+    var activeDeployment: Deployment? {
+        activeDeployments?.first
+    }
+
+    var isRunning: Bool {
+        activeDeployment != nil
+    }
 }
 
 // MARK: - Mutation Response Types
