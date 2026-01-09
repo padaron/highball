@@ -155,6 +155,30 @@ actor RailwayAPIClient {
     }
     """
 
+    private static let environmentDeploymentsQuery = """
+    query EnvironmentDeployments($environmentId: String!) {
+      environment(id: $environmentId) {
+        serviceInstances {
+          edges {
+            node {
+              serviceId
+              latestDeployment {
+                id
+                status
+                createdAt
+              }
+              activeDeployments {
+                id
+                status
+                createdAt
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+
     // MARK: - GraphQL Mutations
 
     private static let deploymentRestartMutation = """
@@ -249,7 +273,35 @@ actor RailwayAPIClient {
         return response.data?.project
     }
 
-    func fetchServiceDeployment(serviceId: String) async throws -> Deployment? {
+    func fetchServiceDeployment(serviceId: String, environmentId: String? = nil) async throws -> Deployment? {
+        // If environmentId is provided, query through environment to get correct deployment
+        if let environmentId = environmentId {
+            let variables: [String: Any] = ["environmentId": environmentId]
+
+            let response: GraphQLResponse<EnvironmentData> = try await execute(
+                query: Self.environmentDeploymentsQuery,
+                variables: variables,
+                queryName: "EnvironmentDeployments"
+            )
+
+            if let errors = response.errors, !errors.isEmpty {
+                throw RailwayAPIError.graphQLErrors(errors.map(\.message))
+            }
+
+            // Find the service instance matching this serviceId
+            let serviceInstance = response.data?.environment?.serviceInstances.edges
+                .map(\.node)
+                .first(where: { $0.serviceId == serviceId })
+
+            // Return active deployment if running, otherwise latest
+            if let activeDeployment = serviceInstance?.activeDeployment {
+                return activeDeployment
+            }
+
+            return serviceInstance?.latestDeployment
+        }
+
+        // Fallback to old query if no environmentId (backward compatibility)
         let variables: [String: Any] = ["serviceId": serviceId]
 
         let response: GraphQLResponse<ServiceDeploymentsData> = try await execute(
@@ -275,6 +327,7 @@ actor RailwayAPIClient {
             throw error
         }
     }
+
 
     /// Restart a deployment (keeps the same build, just restarts the container)
     func restartDeployment(deploymentId: String) async throws {

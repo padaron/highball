@@ -4,6 +4,12 @@ struct StatusDropdownView: View {
     @ObservedObject var monitor: StatusMonitor
     @Environment(\.openURL) private var openURL
     @Environment(\.openWindow) private var openWindow
+    @State private var expandedAppId: UUID?
+
+    var ungroupedServices: [MonitoredService] {
+        monitor.getUngroupedServices()
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Header
@@ -50,50 +56,70 @@ struct StatusDropdownView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
             } else {
-                ForEach(monitor.services) { service in
-                    ServiceRowView(service: service)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            if let url = service.railwayURL {
-                                openURL(url)
-                            }
+                // Apps
+                ForEach(monitor.apps) { app in
+                    AppRowView(app: app, monitor: monitor, expandedAppId: $expandedAppId)
+                }
+
+                // Ungrouped services
+                if !ungroupedServices.isEmpty {
+                    if !monitor.apps.isEmpty {
+                        Divider()
+                        HStack {
+                            Text("Other Services")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 4)
+                            Spacer()
                         }
-                        .contextMenu {
-                            Button {
-                                Task {
-                                    try? await monitor.restartService(service)
-                                }
-                            } label: {
-                                Label("Restart", systemImage: "arrow.clockwise")
-                            }
+                    }
 
-                            Button {
-                                Task {
-                                    try? await monitor.redeployService(service)
-                                }
-                            } label: {
-                                Label("Redeploy", systemImage: "hammer")
-                            }
-
-                            Divider()
-
-                            Button {
+                    ForEach(ungroupedServices) { service in
+                        ServiceRowView(service: service)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
                                 if let url = service.railwayURL {
-                                    NSWorkspace.shared.open(url)
+                                    openURL(url)
                                 }
-                            } label: {
-                                Label("View in Railway", systemImage: "safari")
                             }
-
-                            if let deploymentId = service.deploymentId {
+                            .contextMenu {
                                 Button {
-                                    let logsURL = URL(string: "https://railway.com/project/\(service.projectId)/service/\(service.id)/deployment/\(deploymentId)?tab=logs")!
-                                    NSWorkspace.shared.open(logsURL)
+                                    Task {
+                                        try? await monitor.restartService(service)
+                                    }
                                 } label: {
-                                    Label("View Logs", systemImage: "doc.text")
+                                    Label("Restart", systemImage: "arrow.clockwise")
+                                }
+
+                                Button {
+                                    Task {
+                                        try? await monitor.redeployService(service)
+                                    }
+                                } label: {
+                                    Label("Redeploy", systemImage: "hammer")
+                                }
+
+                                Divider()
+
+                                Button {
+                                    if let url = service.railwayURL {
+                                        NSWorkspace.shared.open(url)
+                                    }
+                                } label: {
+                                    Label("View in Railway", systemImage: "safari")
+                                }
+
+                                if let deploymentId = service.deploymentId {
+                                    Button {
+                                        let logsURL = URL(string: "https://railway.com/project/\(service.projectId)/service/\(service.id)/deployment/\(deploymentId)?tab=logs")!
+                                        NSWorkspace.shared.open(logsURL)
+                                    } label: {
+                                        Label("View Logs", systemImage: "doc.text")
+                                    }
                                 }
                             }
-                        }
+                    }
                 }
             }
 
